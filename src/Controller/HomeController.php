@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Immobilier;
+use App\Entity\ImmoVente;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,11 +19,8 @@ class HomeController extends AbstractController
     }
     
     /**
-     * 
      * @Route("/", name="index")
      * @Route("/accueil", name="index.accueil")
-     * 
-     * 
      */
     public function index()
     {
@@ -78,6 +76,51 @@ class HomeController extends AbstractController
             'formImmobilier' => $form->createView()
         ]);
     }
+
+
+// Creation de bien avec ImmoVente
+ /** 
+  *  * @Route("/immo/nouveau2", name="immo.nouveau2")
+  */  
+    public function nouveau2(Request $request)
+    {
+        $entityManager = $this->entityManager;
+        $immovente = new ImmoVente();
+
+        // Demande de al creation du Formaulaire avec CreateFormBuilder
+        $form = $this->createFormBuilder($immovente)
+                    ->add('titre')
+                    ->add('photo')                
+                    ->add('description')    
+
+        //Utiser la Function GetForm pour voir le resultat Final
+                    ->getForm();
+        
+        // Traitement de la requete (http) passée en parametre
+        $form->handleRequest($request);
+
+        // Test sur le Remplissage / la soummision et la validité des champs
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            // Affectation de la Date à mon article
+            $immovente->setCreatedAt(new \DateTime());
+
+            $entityManager->persist($immovente );
+            $entityManager->flush();
+
+            //Enregistrement et Retour sur la page de l'article
+            return $this->redirectToRoute('immo.nouveau', ['id'=>$immovente->getId()]);
+        }
+         
+            
+        //aPassage à Twig des Variable à afficher avec lmethode CreateView
+        return $this->render('home/nouveau.html.twig', [
+            'formImmobilier' => $form->createView()
+        ]);
+    }
+
+
+
 
 
      /**
