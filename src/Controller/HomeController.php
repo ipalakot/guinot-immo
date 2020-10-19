@@ -8,7 +8,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 
 class HomeController extends AbstractController
 {
@@ -78,13 +80,53 @@ class HomeController extends AbstractController
     }
 
 
-// Creation de bien avec ImmoVente
- /** 
-  *  * @Route("/immo/nouveau2", name="immo.nouveau2")
-  */  
-    public function nouveau2(Request $request)
+    /** 
+     * @Route("/immo/{id}/edit", name="immo.edition", methods="GET|POST")
+    */
+    
+    // Edition d'un Bien
+    public function edit($id,Request $request, EntityManagerInterface $entityManager )
     {
-        $entityManager = $this->entityManager;
+
+        $immobilier =  $entityManager->getRepository(Immobilier::class)->find($id);
+
+        // Demande de al creation du Formaulaire avec CreateFormBuilder
+        $form = $this->createFormBuilder($immobilier)
+                    ->add('titre')
+                    ->add('photo')                
+                    ->add('description')    
+
+        //Utiser la Function GetForm pour voir le resultat Final
+                    ->getForm();
+        
+        // Traitement de la requete (http) passée en parametre
+        $form->handleRequest($request);
+
+        // Test sur le Remplissage / la soummision et la validité des champs
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($immobilier);
+            $entityManager->flush();
+
+            //Enregistrement et Retour sur la page de l'article
+            return $this->redirectToRoute('index.affich', ['id'=>$immobilier->getId()]);
+        }
+         
+            
+        //aPassage à Twig des Variable à afficher avec lmethode CreateView
+        return $this->render('home/nouveau.html.twig', [
+            'formImmobilier' => $form->createView()
+        ]);
+    }
+// Modification de bien avec ImmoVente
+ /** 
+  * @Route("/immo/{id}/edit", name="immo.modif", methods="GET|POST")
+  */  
+
+/*  public function modif(ImmoVente $immovente, Request $request)
+    {
+
         $immovente = new ImmoVente();
 
         // Demande de al creation du Formaulaire avec CreateFormBuilder
@@ -103,13 +145,16 @@ class HomeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             
             // Affectation de la Date à mon article
-            $immovente->setCreatedAt(new \DateTime());
+
+            if (! $immovente->getId()){
+                  $immovente->setCreatedAt(new \DateTime());
+                }
 
             $entityManager->persist($immovente );
             $entityManager->flush();
 
             //Enregistrement et Retour sur la page de l'article
-            return $this->redirectToRoute('immo.nouveau', ['id'=>$immovente->getId()]);
+            return $this->redirectToRoute('index.affich', ['id'=>$immovente->getId()]);
         }
          
             
@@ -119,11 +164,8 @@ class HomeController extends AbstractController
         ]);
     }
 
-
-
-
-
-     /**
+*/
+    /**
     * @Route("/immo/{id}", name="index.affich")
     */
     // recuperation de l'identifiant

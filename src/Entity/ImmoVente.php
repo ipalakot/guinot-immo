@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ImmoVenteRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ImmoVenteRepository::class)
@@ -19,6 +20,7 @@ class ImmoVente
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min = 10, max = 50)
      */
     private $titre;
 
