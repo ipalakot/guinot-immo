@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
+use Knp\Component\Pager\PaginatorInterface;
 
 class HomeController extends AbstractController
 {
@@ -32,11 +33,15 @@ class HomeController extends AbstractController
      * @Route("/", name="index")
      * @Route("/accueil", name="index.accueil")
      */
-    public function index(ImmobilierRepository $immorepo)
+    public function index(ImmobilierRepository $immorepo, PaginatorInterface $paginator, Request $request)
     {
     // Connexion à ma BD
        // $repo = $this->getDoctrine()->getRepository(Immobilier::class);
-        $immobiliers = $immorepo->findAll();
+        $immobiliers = $paginator->paginate(
+            $immorepo->findAll(),
+            $request->query->getInt('page', 1), /*page number*/
+            3 /*limit per page*/
+         );
 
        // Appel de la page pour affichage
         return $this->render('home/index.html.twig', [
@@ -116,8 +121,8 @@ class HomeController extends AbstractController
         // Test sur le Remplissage / la soummision et la validité des champs
         if ($form->isSubmitted() && $form->isValid()) {
             
-           // $entityManager = $this->getDoctrine()->getManager();
-           $this->em->persist($immobilier);
+        // $entityManager = $this->getDoctrine()->getManager();
+        // $this->em->persist($immobilier); // Pas besoin de faire de Persistance ici, L'objet vient de la Base de données
            $this->em->flush();
             
 
@@ -155,9 +160,42 @@ class HomeController extends AbstractController
     }
 
 
-    
-    
+    /**
+     * @Route("/immo/{id}/edit", name="index.suppression", methods={"DELETE"})
+     */
+    /*public function delete(Request $request, Immobilier $immobilier ): Response
+    {
+        {
+           /* $this->$em->getDoctrine()->getManager();
+            $this->$em->remove($immobilier);
+            $em->flush(); *//*
+            if ($this->isCsrfTokenValid('delete'.$immobilier->getId(), $request->request->get('_token'))) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($immobilier);
+                $entityManager->flush();
 
+            }
+        }
+
+        return new Response ('Produit supprimé');
+        //return $this->redirectToRoute('immo.nouveau');
+    }
+    */
+    
+    /**
+     * @Route("immo/{id}/delete", name="immo_delete", methods={"DELETE"})
+     */
+
+
+    public function delete(Request $request, Immobilier $immobilier): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$immobilier->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($immobilier);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('index.accueil');
+    }
     /**
      * @param
      * @Route("/apropos", name="apropos")

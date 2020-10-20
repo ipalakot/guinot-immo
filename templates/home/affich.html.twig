@@ -24,7 +24,10 @@
                  <p align="justify"> {{ immobilier.description}}   </p> 
                  <p align="justify"> {{ immobilier.description}}   </p> 
       {#           <a href="{{ path('index.affich', {'id': immobilier.id })}}" class="btn btn-primary"> Consulter</a> #}  
-            </div>          
+            </div>     
+
+                   {{ include('all/_delete_form.html.twig') }}
+                    
     </affichage>
           <hr> </hr>
 
