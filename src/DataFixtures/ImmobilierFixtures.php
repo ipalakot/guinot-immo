@@ -1,10 +1,11 @@
 <?php
 
 namespace App\DataFixtures;
+use App\Entity\Immobilier;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Entity\Immobilier;
+
 
 class ImmobilierFixtures extends Fixture
 {

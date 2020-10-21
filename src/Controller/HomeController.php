@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Immobilier;
-use App\Entity\ImmoVente;
+
 use App\Repository\ImmobilierRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -158,35 +158,10 @@ class HomeController extends AbstractController
             'immobilier' => $immobilier
         ]);
     }
-
-
-    /**
-     * @Route("/immo/{id}/edit", name="index.suppression", methods={"DELETE"})
-     */
-    /*public function delete(Request $request, Immobilier $immobilier ): Response
-    {
-        {
-           /* $this->$em->getDoctrine()->getManager();
-            $this->$em->remove($immobilier);
-            $em->flush(); *//*
-            if ($this->isCsrfTokenValid('delete'.$immobilier->getId(), $request->request->get('_token'))) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->remove($immobilier);
-                $entityManager->flush();
-
-            }
-        }
-
-        return new Response ('Produit supprimé');
-        //return $this->redirectToRoute('immo.nouveau');
-    }
-    */
-    
     /**
      * @Route("immo/{id}/delete", name="immo_delete", methods={"DELETE"})
      */
-
-
+    // recuperation de l'identifiant
     public function delete(Request $request, Immobilier $immobilier): Response
     {
         if ($this->isCsrfTokenValid('delete'.$immobilier->getId(), $request->request->get('_token'))) {

@@ -1,20 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello LocationController!{% endblock %}
+{% block title %}Guinot-immobilier{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class = "jumbotron">
+        <br> GUINOT IMMOBILIER:</br>
+        <br> ACCESS LOCATION & VENTE D'APPARTEMENTS</br>
+    </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/symfony/classrooms/2021/guinot-immobilier/src/Controller/LocationController.php'|file_link(0) }}">src/Controller/LocationController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/symfony/classrooms/2021/guinot-immobilier/templates/location/index.html.twig'|file_link(0) }}">templates/location/index.html.twig</a></code></li>
-    </ul>
+-----------------------------------------------------
+<div class="container">
+      
+{# Liste de ce que j'aimerai afficher#}
+<div class = "row">
+     <div class="col-12">
+          {% for location in locations %}     
+               <resume>
+               {# Faisant une interpollation#}
+               <h5>{{ location.denomination }}</h5>
+               <p> publié le: : {{ location.createdAt | date('d/m/Y')}}</p>
+               <div class = "content">
+                    <img src="{{ location.photo}}" alt=""  align="left">
+                    <p align="justify"> - Localisation:  {{ location.adresse}}   </p> 
+                    <p align="justify"> - Description: {{ location.description}}   </p> 
+                    <p align="justify"> - Surface: {{ location.surface}} M2   </p> 
+                    <p align="justify"> - Nombre de Chambres: {{ location.chambre}}   </p> 
+                    <p align="justify"> - Prix: {{ location.prix}}  TTC </p> 
+                    <a href="{{ path('location.index', {'id': location.id })}}" class="btn btn-primary"> Consulter </a>  
+               <br></br>
+               </div>          
+               </resume>
+               <hr> </hr>
+          {% endfor %} 
+     </div>
 </div>
+ <div class="pagination">
+        {{ knp_pagination_render(locations) }}
+    </div>
+
+</div>
+
 {% endblock %}

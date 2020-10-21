@@ -24,24 +24,29 @@
             </tr>
         </thead>
         <tbody>
-             {% for immobilier in immobiliers %}   
-
+             {% for location in locations %}   
             <tr>
-                <td>{{ immobilier.id }}</td>
-                <td>{{ immobilier.titre }}</td>
+                <td>{{ location.id }}</td>
+                <td>{{ location.denomination }}</td>
                 <td>xxxxxxxxxxxxx</td>
-                <td>{{ immobilier.createdAt ? immobilier.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ location.createdAt ? location.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('index.affich', {'id': immobilier.id}) }}"><button type="button" class="btn btn-info">Lire </a>
-                    <a href="{{ path('immo.edition', {'id': immobilier.id}) }}"><button type="button" class="btn btn-primary">Editer</a>
-                    <button class="btn btn-danger">{{ include('all/_delete_form.html.twig') }} </button>
+                   <a href="#"><button type="button" class="btn btn-info">Lire </a>
+                     <a href="#"><button type="button" class="btn btn-primary">Editer</a>
+                    <button class="btn btn-danger">{{ include('location/_delete_form.html.twig') }} </button>
                 </td>
             </tr>
+            
         {% else %}
              <tr>
                 <td colspan="9">no records found</td>
+
             </tr>
+        
+                  <br>
+                  <br>
         {% endfor %}
+        <a href="{{ path('location.nouveau.admin') }}"><button type="button" class="btn btn-danger">Enregistrer un nouveau Bien </a>
         </tbody>
     </table>
         </br>
@@ -58,7 +63,7 @@
 </div>
 
  <div class="pagination">
-        {{ knp_pagination_render(immobiliers) }}
+        {{ knp_pagination_render(locations) }}
     </div>
 
 </div>
