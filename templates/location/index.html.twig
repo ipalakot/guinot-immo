@@ -19,8 +19,10 @@
                {# Faisant une interpollation#}
                <h5>{{ location.denomination }}</h5>
                <p> publié le: : {{ location.createdAt | date('d/m/Y')}}</p>
+
                <div class = "content">
                     <img src="{{ location.photo}}" alt=""  align="left">
+                    <p> - Categorie: {{location.categorie.titre}} </p> 
                     <p align="justify"> - Localisation:  {{ location.adresse}}   </p> 
                     <p align="justify"> - Description: {{ location.description}}   </p> 
                     <p align="justify"> - Surface: {{ location.surface}} M2   </p> 
