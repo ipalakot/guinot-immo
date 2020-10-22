@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Location;
+use App\Entity\Categorie;
 
 use App\Repository\LocationRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,11 +14,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Knp\Component\Pager\PaginatorInterface;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class LocationController extends AbstractController
 { 
     /**
-     * @param ImmobilierRepository $immobilierrepository
+     * @param LocationRepository $locationrepository
      * @param EntityManageInterface $em
      * @return void
      */
@@ -26,8 +28,6 @@ class LocationController extends AbstractController
         $this->em = $em;
     }
     
-
-
     /**
      * Affichage aux users de Biens en location
      * @param
@@ -37,7 +37,7 @@ class LocationController extends AbstractController
     public function index(LocationRepository $locarepo, PaginatorInterface $paginator, Request $request)
     {
     // Connexion à ma BD
-       // $repo = $this->getDoctrine()->getRepository(Immobilier::class);
+       // $repo = $this->getDoctrine()->getRepository(Location::class);
         $locations = $paginator->paginate(
             $locarepo->findAll(),
             $request->query->getInt('page', 1), /*page number*/
@@ -46,7 +46,7 @@ class LocationController extends AbstractController
 
        // Appel de la page pour affichage
         return $this->render('location/index.html.twig', [
-            // passage du contenu de $immobilier
+            // passage du contenu de $location
             'locations'=>$locations
         ]);
     }
@@ -61,7 +61,7 @@ class LocationController extends AbstractController
     public function admin(LocationRepository $locarepo, PaginatorInterface $paginator, Request $request)
     {
     // Connexion à ma BD
-       // $repo = $this->getDoctrine()->getRepository(Immobilier::class);
+       // $repo = $this->getDoctrine()->getRepository(Location::class);
         $locations = $paginator->paginate(
             $locarepo->findAll(),
             $request->query->getInt('page', 1), /*page number*/
@@ -70,7 +70,7 @@ class LocationController extends AbstractController
 
        // Appel de la page pour affichage
         return $this->render('location/admin.html.twig', [
-            // passage du contenu de $immobilier
+            // passage du contenu de $location
             'locations'=>$locations
         ]);
     }
@@ -90,7 +90,11 @@ class LocationController extends AbstractController
     // Creation du Formaulaire avec CreateFormBuilder
         $form = $this->createFormBuilder($location)
                     ->add('denomination')
-                    ->add('categorie')                
+                    ->add('categorie', EntityType::class, [
+                        // looks for choices from this entity
+                            'class' => Categorie::class,
+                        // uses the User.username property as the visible option string
+                        'choice_label' => 'titre'])                
                     ->add('photo')   
                     ->add('description')
                     ->add('surface')                
@@ -120,26 +124,46 @@ class LocationController extends AbstractController
             $this->em->flush();
 
             //Enregistrement et Retour sur la page de l'article
-            return $this->redirectToRoute('location.nouveau', ['id'=>$location->getId()]);
+            return $this->redirectToRoute('location.nouveau.admin', ['id'=>$location->getId()]);
         }
                      
         //Passage à Twig des Variable à afficher avec lmethode CreateView
         return $this->render('location/nouveau.html.twig', [
-            'immobilier'=>$location,
+            'location'=>$location,
             'formlocation' => $form->createView()
         ]);
     }
 
 
-
-    // Edition de Biens locatifs 
+    /** 
+     * // Edition de Biens locatifs 
+     * @param Request $request
+     * @param Location $location
+     * @Route("admin/loca/{id}/edit", name="location.edition", methods="GET|POST")
+     * @param void
+    */
     public function edit($id, location $location, Request $request)
     {
         // Demande de al creation du Formaulaire avec CreateFormBuilder
-        $form = $this->createFormBuilder($immobilier)
-                    ->add('titre')
-                    ->add('photo')                
-                    ->add('description')    
+                $form = $this->createFormBuilder($location)
+                ->add('denomination')
+                ->add('categorie', EntityType::class, [
+                    // looks for choices from this entity
+                        'class' => Categorie::class,
+                    // uses the User.username property as the visible option string
+                    'choice_label' => 'titre'])                
+                ->add('photo')   
+                ->add('description')
+                ->add('surface')                
+                ->add('type')     
+                ->add('chambre')
+                ->add('etage')                
+                ->add('prix')    
+                ->add('adresse')
+                ->add('cp')                
+                ->add('ville')    
+                ->add('pays')      
+                ->add('accessibility')  
 
         //Utiser la Function GetForm pour voir le resultat Final
                     ->getForm();
@@ -151,20 +175,45 @@ class LocationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             
         // $entityManager = $this->getDoctrine()->getManager();
-        // $this->em->persist($immobilier); // Pas besoin de faire de Persistance ici, L'objet vient de la Base de données
+        // $this->em->persist($location); // Pas besoin de faire de Persistance ici, L'objet vient de la Base de données
            $this->em->flush();
             
 
         //Enregistrement et Retour sur la page de l'article
-            return $this->redirectToRoute('index.affich', ['id'=>$immobilier->getId()]);
+            return $this->redirectToRoute('location_admin.index');
         }
          
             
         //aPassage à Twig des Variable à afficher avec lmethode CreateView
-        return $this->render('home/nouveau.html.twig', [
-            'formImmobilier' => $form->createView()
+        return $this->render('location/nouveau.html.twig', [
+            'formlocation' => $form->createView()
         ]);
     }
+
+    
+    /**
+     * Affiche en details d'un Bien locatif
+     * @param $id
+     * @param LocationRepository $immorepo
+     * @Route("/location/{id}", name="location.affich")
+     * @param 
+    */
+    // recuperation de l'identifiant
+    public function affichage($id, LocationRepository $locarepo ) 
+    {
+        // Appel à Doctrine & au repository
+        // $repo = $this->getDoctrine()->getRepository(Location::class);
+
+        //Recherche de l'article avec son identifaint
+        $location = $locarepo->find($id);
+        // Passage à Twig de tableau avec des variables à utiliser
+        return $this->render('location/affich.html.twig', [
+            'controller_name' => 'LocationController',
+            'location' => $location
+        ]);
+    }
+
+
 
 
 }

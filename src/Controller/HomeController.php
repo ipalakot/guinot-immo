@@ -158,6 +158,10 @@ class HomeController extends AbstractController
             'immobilier' => $immobilier
         ]);
     }
+
+
+
+    
     /**
      * @Route("immo/{id}/delete", name="immo_delete", methods={"DELETE"})
      */

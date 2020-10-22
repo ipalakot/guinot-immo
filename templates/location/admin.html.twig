@@ -28,11 +28,11 @@
             <tr>
                 <td>{{ location.id }}</td>
                 <td>{{ location.denomination }}</td>
-                <td>xxxxxxxxxxxxx</td>
+                <td> {{location.categorie.titre}}</td>
                 <td>{{ location.createdAt ? location.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                   <a href="#"><button type="button" class="btn btn-info">Lire </a>
-                     <a href="#"><button type="button" class="btn btn-primary">Editer</a>
+                    <a href="{{ path('location.affich', {'id': location.id}) }}"><button type="button" class="btn btn-info">Lire </a>
+                     <a href="{{ path('location.edition', {'id': location.id}) }}"><button type="button" class="btn btn-primary">Editer</a>
                     <button class="btn btn-danger">{{ include('location/_delete_form.html.twig') }} </button>
                 </td>
             </tr>
