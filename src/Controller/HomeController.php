@@ -160,8 +160,6 @@ class HomeController extends AbstractController
     }
 
 
-
-    
     /**
      * @Route("immo/{id}/delete", name="immo_delete", methods={"DELETE"})
      */
@@ -175,6 +173,9 @@ class HomeController extends AbstractController
         }
         return $this->redirectToRoute('index.accueil');
     }
+
+
+    
     /**
      * @param
      * @Route("/apropos", name="apropos")

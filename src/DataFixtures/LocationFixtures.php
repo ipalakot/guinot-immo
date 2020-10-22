@@ -7,17 +7,13 @@ use App\Entity\Categorie;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-
-
 class LocationFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        // $product = new Product();
-        // $manager->persist($product);
-    
- //   $faker = \Faker\Factory::create('fr_FR');
-    
+    // $product = new Product();
+    // $manager->persist($product);
+    // $faker = \Faker\Factory::create('fr_FR');
     // Creer occurence de 10 Categroie
     for($i=1; $i<5; $i++){
         $categorie = new Categorie();
@@ -26,7 +22,7 @@ class LocationFixtures extends Fixture
 
         $manager->persist($categorie);
 
-// Mainteannt je cree mes Bien Locatifs
+    // Mainteannt je cree mes Bien Locatifs
         for($j=1; $j<10; $j++){
             $location = new Location();
             $location->setDenomination("Denomination")
@@ -47,7 +43,6 @@ class LocationFixtures extends Fixture
             $manager->persist($location);
         }
     }
-
 $manager->flush();
 }
 }

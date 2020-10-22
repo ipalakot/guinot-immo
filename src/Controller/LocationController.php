@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Location;
-use App\Entity\Categorie;
-
 use App\Repository\LocationRepository;
+
+use App\Entity\Categorie;
+use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -213,6 +214,21 @@ class LocationController extends AbstractController
         ]);
     }
 
+    
+    /**
+     * Suupression d'un Bien locatif
+     * @Route("admin/loca/{id}/delete", name="loca.delete", methods={"DELETE"})
+     */
+    // recuperation de l'identifiant
+    public function delete(Request $request, Location $location): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$location->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($location);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('location_admin.index');
+    }
 
 
 
