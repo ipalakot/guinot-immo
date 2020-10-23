@@ -1,44 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Guinot-immobilier{% endblock %}
+{% block denomination %}Guinot-immobilier{% endblock %}
 
 {% block body %}
-    <div class = "jumbotron">
-        <br> GUINOT IMMOBILIER:</br>
-        <br> ACCESS LOCATION & VENTE D'APPARTEMENTS</br>
-    </div>
+  {{ include('_header_footers/header_location.html.twig') }}
 
------------------------------------------------------
-<div class="container">
-      
-{# Liste de ce que j'aimerai afficher#}
-<div class = "row">
-     <div class="col-12">
-          {% for location in locations %}     
-               <resume>
-               {# Faisant une interpollation#}
-               <h5>{{ location.denomination }}</h5>
-               <p> publié le: : {{ location.createdAt | date('d/m/Y')}}</p>
+    <div class="container">
+          <div class="row" >
+               {%for location in locations | slice(0,length=12) %}
+                    <div class="col-3">
+                         <div class="card">
+                               <img src=" {{ location.photo }} " alt="" width="250">
+                              <h5>{{location.denomination}}</h5>
+                               <ul>
+                                   <li><p>Surface : {{ location.surface}} M2</p></li> 
+                                   <li><p>Type : {{ location.type}}</p></li> 
+                                   <li><p>Prix : {{ location.prix}} € / mois  </p> </li> 
+                                   <a href="{{ path('location.affich', {'id': location.id}) }}"><button type="button" class="btn btn-info">Consultez </a>
+                               </ul>
+                         </div>
+                    </div>
+               {% endfor%}
+          
+          </div>
+     
 
-               <div class = "content">
-                    <img src="{{ location.photo}}" alt=""  align="left">
-                    <p> - Categorie: {{location.categorie.titre}} </p> 
-                    <p align="justify"> - Localisation:  {{ location.adresse}}   </p> 
-                    <p align="justify"> - Description: {{ location.description}}   </p> 
-                    <p align="justify"> - Surface: {{ location.surface}} M2   </p> 
-                    <p align="justify"> - Nombre de Chambres: {{ location.chambre}}   </p> 
-                    <p align="justify"> - Prix: {{ location.prix}}  TTC </p> 
-                    <a href="{{ path('location.index', {'id': location.id })}}" class="btn btn-primary"> Consulter </a>  
-               <br></br>
-               </div>          
-               </resume>
-               <hr> </hr>
-          {% endfor %} 
-     </div>
-</div>
  <div class="pagination">
         {{ knp_pagination_render(locations) }}
-    </div>
+</div>
 
 </div>
 

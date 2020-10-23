@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Form\ChoiceList\ChoiceList;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
@@ -31,18 +33,19 @@ class LocationController extends AbstractController
     
     /**
      * Affichage aux users de Biens en location
-     * @param
+     * Affichage pour les visiteurs // Different de l'affichage pour les Admins
+     * @param LocationRepository $locarepo,
+     * @param PaginatorInterface $paginator,
+     * @param Request $request,
      * @Route("/location", name="location.index")
      * @param
      */
     public function index(LocationRepository $locarepo, PaginatorInterface $paginator, Request $request)
     {
-    // Connexion à ma BD
-       // $repo = $this->getDoctrine()->getRepository(Location::class);
-        $locations = $paginator->paginate(
+        $locations = $paginator->paginate( //utilisation du Paginator pour la pagination des pages
             $locarepo->findAll(),
             $request->query->getInt('page', 1), /*page number*/
-            10 /*limit per page*/
+            8 /*limit per page*/
          );
 
        // Appel de la page pour affichage
@@ -99,15 +102,35 @@ class LocationController extends AbstractController
                     ->add('photo')   
                     ->add('description')
                     ->add('surface')                
-                    ->add('type')     
-                    ->add('chambre')
+                    ->add('type', ChoiceType::class, array(
+                            'choices' => array(
+                                'F1'=> 'F1',
+                                'F2'=> 'F2',
+                                'F3'=> 'F3',
+                                'F4'=> 'F4',
+                                'F5'=> 'F5',
+                                'F6'=> 'F6',
+                            )))
+    
+                    ->add('chambre', ChoiceType::class, array(
+                        'choices' => array(
+                            '1'=> '1',
+                            '2'=> '2',
+                            '3'=> '3',
+                            '4'=> '4',
+                            '5'=> '5',
+                            '6'=> '6',
+                        )))
                     ->add('etage')                
                     ->add('prix')    
                     ->add('adresse')
                     ->add('cp')                
                     ->add('ville')    
                     ->add('pays')      
-                    ->add('accessibility')          
+                    ->add('accessibility', ChoiceType::class, array(
+                        'choices' => array(
+                            'Oui'=> 'oui',
+                        )))          
 
         //Utiser la Function GetForm pour voir le resultat Final
                     ->getForm();
@@ -135,7 +158,6 @@ class LocationController extends AbstractController
         ]);
     }
 
-
     /** 
      * // Edition de Biens locatifs 
      * @param Request $request
@@ -156,7 +178,15 @@ class LocationController extends AbstractController
                 ->add('photo')   
                 ->add('description')
                 ->add('surface')                
-                ->add('type')     
+                ->add('type', ChoiceType::class, array(
+                    'choices' => array(
+                        'F1'=> 'F1',
+                        'F2'=> 'F2',
+                        'F3'=> 'F3',
+                        'F4'=> 'F4',
+                        'F5'=> 'F5',
+                        'F5'=> 'F6',
+                    )))    
                 ->add('chambre')
                 ->add('etage')                
                 ->add('prix')    
@@ -190,7 +220,6 @@ class LocationController extends AbstractController
             'formlocation' => $form->createView()
         ]);
     }
-
     
     /**
      * Affiche en details d'un Bien locatif
@@ -213,7 +242,6 @@ class LocationController extends AbstractController
             'location' => $location
         ]);
     }
-
     
     /**
      * Suupression d'un Bien locatif
@@ -229,7 +257,5 @@ class LocationController extends AbstractController
         }
         return $this->redirectToRoute('location_admin.index');
     }
-
-
 
 }
