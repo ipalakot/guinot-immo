@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Location;
 use App\Entity\Categorie;
-
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\AST\Join;
@@ -31,14 +30,18 @@ class LocationRepository extends ServiceEntityRepository
             return $this->findBy([], ['createdAt' => 'DESC']);
         }
       
+        /**
+         * Requetespour les Recherches des Terrains
+         * @param 
+         * @method findByCatTerrains()
+         *          * 
+         */
         public function findByCatTerrains()
         {
             $qb = $this->createQueryBuilder('p');
             
             $qb
-              //  ->select('c.titre')
                 ->innerJoin('App\Entity\Categorie',  'c', 'WITH', 'c = p.categorie')
-              //  ->select('p.denomination')
                 ->where('p.createdAt IS NOT NULL')
                 ->andWhere('c.titre like :titre')
                 ->setParameter('titre', 'Terrains');
@@ -48,9 +51,45 @@ class LocationRepository extends ServiceEntityRepository
             return $qb->getQuery()->getResult();
         }
             
+        /**
+         * Requetespour les Recherches des Appartements
+         * @param 
+         * @method
+         *          * 
+         */
+        public function findByCatAppartements()
+        {
+            $qb = $this->createQueryBuilder('p');
+            
+            $qb
+                ->innerJoin('App\Entity\Categorie',  'c', 'WITH', 'c = p.categorie')
+                ->where('p.createdAt IS NOT NULL')
+                ->andWhere('c.titre like :titre')
+                ->setParameter('titre', 'Appartements'); 
+               // dump($qb->getQuery()->getResult());
 
+            return $qb->getQuery()->getResult();
+        }
 
+        /**
+         * Requetespour les Recherches des Appartements
+         * @param 
+         * @method
+         * 
+         */
+        public function findByCatMaisons()
+        {
+            $qb = $this->createQueryBuilder('p');
+            
+            $qb
+                ->innerJoin('App\Entity\Categorie',  'c', 'WITH', 'c = p.categorie')
+                ->where('p.createdAt IS NOT NULL')
+                ->andWhere('c.titre like :titre')
+                ->setParameter('titre', 'Maisons'); 
+               // dump($qb->getQuery()->getResult());
 
+            return $qb->getQuery()->getResult();
+        }
 
 
     /** 

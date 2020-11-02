@@ -79,7 +79,8 @@ class LocationController extends AbstractController
 
 
 /**
-     * Affichage aux users de terrains
+     * Affichage aux users de terrains en Location
+     * @param LocationRepository $locationrepo,
      * @param Request $request,
      * @Route("/location/terrains", name="location.terrains.index")
      * @param
@@ -88,23 +89,53 @@ class LocationController extends AbstractController
     {
         $locations= $locationrepo->findByCatTerrains();
        // Appel de la page pour affichage
-        return $this->render('location/terrains.html.twig', [
+        return $this->render('location_categorie.html.twig', [
+            // passage du contenu de $location
+            'locations'=>$locations
+        ]);
+    }
+
+/**
+     * Affichage aux users de la liste des Appartements en Location
+     * @param LocationRepository $locationrepo,
+     * @param Request $request,
+     * @Route("/location/appartements", name="location.appartements.index")
+     * @param
+     */
+    public function lisApprtements(LocationRepository $locationrepo, Request $request)
+    {
+        $locations= $locationrepo->findByCatAppartements();
+       // Appel de la page pour affichage
+        return $this->render('location/location_categorie.html.twig', [
+            // passage du contenu de $location
+            'locations'=>$locations
+        ]);
+    }
+
+/**
+     * Affichage aux users de la liste des MAisons en Location
+     * @param LocationRepository $locationrepo,
+     * @param Request $request,
+     * @Route("/location/maisons", name="location.appartements.index")
+     * @param
+     */
+    public function listMaisons(LocationRepository $locationrepo, Request $request)
+    {
+        $locations= $locationrepo->findByCatMaisons();
+       // Appel de la page pour affichage
+        return $this->render('location/location_categorie.html.twig', [
             // passage du contenu de $location
             'locations'=>$locations
         ]);
     }
 
 
-
-
-    
     /** 
      * Creation de Bien en Admin
      * @param Request $request
      * @Route("admin/location/nouveau", name="location.nouveau.admin")
      * @param Response
     */
-    
     // Creation de Location
     public function nouvellocation(Request $request): Response
     {
