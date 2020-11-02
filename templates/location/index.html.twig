@@ -7,15 +7,18 @@
 
     <div class="container">
           <div class="row" >
-               {%for location in locations | slice(0,length=12) %}
+               {%for location in locations | slice(0,length=40) %}
                     <div class="col-3">
                          <div class="card">
                                <img src=" {{ location.photo }} " alt="" width="250">
-                              <h5>{{location.denomination}}</h5>
+                               Publié le: {{location.createdAt | date('d/m/Y') }}
+                              <br>{{location.categorie.titre}}
                                <ul>
-                                   <li><p>Surface : {{ location.surface}} M2</p></li> 
-                                   <li><p>Type : {{ location.type}}</p></li> 
-                                   <li><p>Prix : {{ location.prix}} € / mois  </p> </li> 
+                                   <br>Adresse: {{location.id}} | {{location.ville}} |
+                                   <br>Surface : {{ location.surface}} M2
+                                   <br>Type : {{ location.type}}
+                                   <br>Prix : {{ location.prix}} € / mois 
+                                   <br>
                                    <a href="{{ path('location.affich', {'id': location.id}) }}"><button type="button" class="btn btn-info">Consultez </a>
                                </ul>
                          </div>

@@ -6,7 +6,7 @@ use App\Entity\Location;
 use App\Repository\LocationRepository;
 
 use App\Entity\Categorie;
-use App\Repository\CategorieRepository;
+use App\Entity\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,7 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -31,31 +30,6 @@ class LocationController extends AbstractController
         $this->em = $em;
     }
     
-    /**
-     * Affichage aux users de Biens en location
-     * Affichage pour les visiteurs // Different de l'affichage pour les Admins
-     * @param LocationRepository $locarepo,
-     * @param PaginatorInterface $paginator,
-     * @param Request $request,
-     * @Route("/location", name="location.index")
-     * @param
-     */
-    public function index(LocationRepository $locarepo, PaginatorInterface $paginator, Request $request)
-    {
-        $locations = $paginator->paginate( //utilisation du Paginator pour la pagination des pages
-            $locarepo->findAll(),
-            $request->query->getInt('page', 1), /*page number*/
-            8 /*limit per page*/
-         );
-
-       // Appel de la page pour affichage
-        return $this->render('location/index.html.twig', [
-            // passage du contenu de $location
-            'locations'=>$locations
-        ]);
-    }
-
-
     /**
      * Administration de Biens locatifs
      * @param
@@ -79,6 +53,51 @@ class LocationController extends AbstractController
         ]);
     }
 
+    /**
+     * Affichage aux users de Biens en location
+     * Affichage pour les visiteurs // Different de l'affichage pour les Admins
+     * @param LocationRepository $locarepo,
+     * @param PaginatorInterface $paginator,
+     * @param Request $request,
+     * @Route("/location", name="location.index")
+     * @param
+     */
+    public function index(LocationRepository $locarepo, PaginatorInterface $paginator, Request $request)
+    {
+        $locations = $paginator->paginate( //utilisation du Paginator pour la pagination des pages
+            $locarepo->findAll(),
+            $request->query->getInt('page', 1), /*page number*/
+            40 /*limit per page*/
+         );
+
+       // Appel de la page pour affichage
+        return $this->render('location/index.html.twig', [
+            // passage du contenu de $location
+            'locations'=>$locations
+        ]);
+    }
+
+
+/**
+     * Affichage aux users de terrains
+     * @param Request $request,
+     * @Route("/location/terrains", name="location.terrains.index")
+     * @param
+     */
+    public function lisTerrains(LocationRepository $locationrepo, Request $request)
+    {
+        $locations= $locationrepo->findByCatTerrains();
+       // Appel de la page pour affichage
+        return $this->render('location/terrains.html.twig', [
+            // passage du contenu de $location
+            'locations'=>$locations
+        ]);
+    }
+
+
+
+
+    
     /** 
      * Creation de Bien en Admin
      * @param Request $request

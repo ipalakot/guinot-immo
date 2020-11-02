@@ -3,8 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Location;
+use App\Entity\Categorie;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\AST\Join;
+
 
 /**
  * @method Location|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,7 +23,109 @@ class LocationRepository extends ServiceEntityRepository
         parent::__construct($registry, Location::class);
     }
 
-    // /**
+    /**
+     * @return Location[] Returns an array of Location objects
+     */
+        public function findLastArticles()
+        {
+            return $this->findBy([], ['createdAt' => 'DESC']);
+        }
+      
+        public function findByCatTerrains()
+        {
+            $qb = $this->createQueryBuilder('p');
+            
+            $qb
+              //  ->select('c.titre')
+                ->innerJoin('App\Entity\Categorie',  'c', 'WITH', 'c = p.categorie')
+              //  ->select('p.denomination')
+                ->where('p.createdAt IS NOT NULL')
+                ->andWhere('c.titre like :titre')
+                ->setParameter('titre', 'Terrains');
+               
+                dump($qb->getQuery()->getResult());
+
+            return $qb->getQuery()->getResult();
+        }
+            
+
+
+
+
+
+    /** 
+     * 
+     * 
+    */
+
+/*        public function getLocation($categorie_id = null, $max = null)
+        {
+            $qb = $this->createQueryBuilder('e')
+                ->orderBy('e.location', 'DESC');
+     
+            if($max)
+            {
+                $qb->setMaxResults($max);
+            }
+     
+            if($category_id)
+            {
+                $qb->andWhere('e.categorie = :categorie_id')
+                    ->setParameter('categorie_id', $categorie_id);
+            }
+     
+            $query = $qb->getQuery();
+     
+            return $query->getResult();
+        }
+
+
+
+        
+
+
+
+        public function findAllWithCategories()
+        {
+            $qb = $this->createQueryBuilder('a')
+                ->innerJoin('a.categorie', 'c' )
+                ->orderBy('a.categorie', 'ASC')
+                ->addSelect('c')
+                ->getQuery();
+    
+            return $qb->execute();
+        }
+
+        public function findLatest()
+        {
+            $qb = $this->createQueryBuilder('p')
+                ->addSelect('a', 't')
+                ->innerJoin('p.id', 'a')
+                ->leftJoin('p.categories', 't')
+                ->where('p.categories == :Maisons')
+               # ->orderBy('p.publishedAt', 'DESC')
+              #  ->setParameter('now', new \DateTime())
+            ;
+        }
+            
+
+
+/*
+        public function findAllWithCategoriesAndTags()
+        {
+            $qb = $this->createQueryBuilder('a')
+                ->innerJoin('a.categorie', 'c' )
+                ->andWhere('c.categorie = :Maisons')
+                ->addSelect('c')
+                ->leftJoin('a.', 'Categorie' )
+                ->addSelect('t')
+                ->getQuery();
+    
+            return $qb->execute();
+        }
+*/
+        
+        // /**
     //  * @return Location[] Returns an array of Location objects
     //  */
     /*
@@ -47,4 +153,5 @@ class LocationRepository extends ServiceEntityRepository
         ;
     }
     */
+
 }

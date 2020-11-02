@@ -223,7 +223,7 @@ class Location
         return $this->cp;
     }
 
-    public function setCp(?int $cp): self
+    public function setCp($cp): self
     {
         $this->cp = $cp;
 
