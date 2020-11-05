@@ -23,7 +23,9 @@ class HomeController extends AbstractController
     }
     
     /**
-     * @param
+     * Affichage de la Page UNE du Site
+     * @param LocationRepository $locationRepository, 
+     * @param Request $reques
      * @Route("/", name="index")
      * @Route("/accueil", name="index.accueil")
      */
@@ -38,6 +40,19 @@ class HomeController extends AbstractController
             // passage du contenu de $immobilier
             'locations'=>$locations
         ]);
+    }
+
+
+    /**
+     * Affichage de la Page A propos
+     * @param LocationRepository $locationRepository, 
+     * @param Request $reques
+     * @Route("/about", name="about.index")
+     */
+    public function aboutUs()
+    {
+       // Appel de la page pour affichage
+        return $this->render('home/about.html.twig');
     }
 
 

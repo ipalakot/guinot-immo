@@ -6,7 +6,11 @@ use App\Entity\Location;
 use App\Repository\LocationRepository;
 
 use App\Entity\Categorie;
-use App\Entity\CategorieRepository;
+use App\Repository\CategorieRepositorie;
+
+use App\Form\FilterType;
+use App\Model\Filter;
+
 use Doctrine\ORM\EntityManagerInterface;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormFactoryInterface; 
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
@@ -67,9 +72,8 @@ class LocationController extends AbstractController
         $locations = $paginator->paginate( //utilisation du Paginator pour la pagination des pages
             $locarepo->findAll(),
             $request->query->getInt('page', 1), /*page number*/
-            40 /*limit per page*/
+            20 /*limit per page*/
          );
-
        // Appel de la page pour affichage
         return $this->render('location/index.html.twig', [
             // passage du contenu de $location
@@ -85,11 +89,11 @@ class LocationController extends AbstractController
      * @Route("/location/terrains", name="location.terrains.index")
      * @param
      */
-    public function lisTerrains(LocationRepository $locationrepo, Request $request)
+    public function listTerrains(LocationRepository $locationrepo, Request $request)
     {
         $locations= $locationrepo->findByCatTerrains();
        // Appel de la page pour affichage
-        return $this->render('location_categorie.html.twig', [
+        return $this->render('location/location_categorie.html.twig', [
             // passage du contenu de $location
             'locations'=>$locations
         ]);
@@ -102,21 +106,55 @@ class LocationController extends AbstractController
      * @Route("/location/appartements", name="location.appartements.index")
      * @param
      */
-    public function lisApprtements(LocationRepository $locationrepo, Request $request)
+    public function lisApprtements(LocationRepository $locationrepo, Request $request, FormFactoryInterface $formFactory)
     {
         $locations= $locationrepo->findByCatAppartements();
        // Appel de la page pour affichage
         return $this->render('location/location_categorie.html.twig', [
             // passage du contenu de $location
-            'locations'=>$locations
+            "page" => $locationrepo->getPaginetedPage((int) $request->query->get("page", 1), 2),
+            'locations'=>$locations,
+
         ]);
     }
+    
+    /**
+     * Affichage aux users de la liste des Appartements en Location
+     * @param LocationRepository $locationrepo,
+     * @param Request $request,
+     * @Route("/location/filter", name="location.filter.index")
+     * @param
+     */
+    
+     public function filtre(LocationRepository $locationrepo, Request $request, FormFactoryInterface $formFactory)
+    {
+        $filter = new Filter();
+        
+        $form = $formFactory->create(FilterType::class, $filter);
+    /*     $form = $this->createFormBuilder($filter)
+                       ->add('keywword')
+                       ->add("categorie", EntityType::class, [
+                        "class" => Categorie::class,
+                        "choice_label" => "titre"
+                        ])
+                        ->add("submit")*/
+
+  //                      ->getForm();
+
+        $form ->handleRequest($request);
+
+        return $this->render('home/location_categorie.html.twig', [
+            // passage du contenu de $location
+            "form" => $form->CreateView()
+        ]);
+    }
+
 
 /**
      * Affichage aux users de la liste des MAisons en Location
      * @param LocationRepository $locationrepo,
      * @param Request $request,
-     * @Route("/location/maisons", name="location.appartements.index")
+     * @Route("/location/maisons", name="location.maisons.index")
      * @param
      */
     public function listMaisons(LocationRepository $locationrepo, Request $request)
