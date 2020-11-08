@@ -6,7 +6,6 @@ use App\Entity\Location;
 use App\Entity\Categorie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query\AST\Join;
 
 /**
  * @method Location|null find($id, $lockMode = null, $lockVersion = null)
@@ -29,7 +28,19 @@ class LocationRepository extends ServiceEntityRepository
             return $this->findBy([], ['createdAt' => 'DESC']);
         }
     
-    public function getPaginetedPage(int $page, int $length)
+   /**
+    * Recherche de Locations 
+    * @param
+    * @param 
+    * @return Location[]
+    * 
+    */
+        public function findSearch(){
+        
+        return $this->findAll();    
+    }
+    
+        public function getPaginetedPage(int $page, int $length)
     {
         $queryBuilder = $this->createQueryBuilder("p")
                             ->orderBy("p.createdAt", "desc" )
@@ -55,6 +66,58 @@ class LocationRepository extends ServiceEntityRepository
         ;
     }
 
+    /** 
+     * Recupère un produit en lien avec un bien
+     * @return Location
+     * @return Location[]
+     * 
+    */
+    public function findLocaRech(): array
+    {
+        
+        return $this->findAll();
+
+    /*     
+        $query = $this
+            ->createQueryBuilder('p')
+            ->select('c', 'p')
+            ->join('p.categorie', 'c');
+
+        if (!empty($search->q)) {
+            $query = $query
+                ->andWhere('p.denomination LIKE :q')
+                ->setParameter('q', "%{$search->q}%"); //Rech Part.
+        }
+
+        if (!empty($search->min)) {
+            $query = $query
+                ->andWhere('p.prix >= :min')
+                ->setParameter('min', $search->min);
+        }
+
+        if (!empty($search->max)) {
+            $query = $query
+                ->andWhere('p.price <= :max')
+                ->setParameter('max', $search->max);
+    
+    */ 
+    
+    }
+
+
+
+    /** 
+     * Recupère un produit en lien avec un bien
+     * @return Location
+     * @return Location[]
+     * 
+    */
+    public function findLocationSearch(): array
+    {
+        return $this->findAll();
+    }
+
+
         
     /**
     * Requetespour les Recherches des Terrains
@@ -76,8 +139,32 @@ class LocationRepository extends ServiceEntityRepository
             return $qb->getQuery()->getResult();
         }
         
+
+
+        public function findByCatTerrains02(Categorie $categorie, $pageId)
+        {
+            $qb = $this->createQueryBuilder('p'); 
+            //qb = $this->getEntityManager()->createQueryBuilder();
+            //    ->add('select', 'p')
+            //   ->from('Application\Model\Entity\Page', 'p')
+            $qb 
+               ->join('App\Entity\Categorie', 'c')
+               ->sw
+               ->where('p.id = :id')
+               ->andWhere('c.titre = :titre')
+               ->setParameter('titre', 'terrains')
+               ->setParameter('pageId', $pageId);
+        
+            return $qb->getQuery()
+                      ->setFetchMode("Application\Model\Entity\Page", "elements", "EAGER")
+                      ->getResult();
+        }
+
+
+
+
         /**
-         * Requetespour les Recherches des Appartements
+         * Requetes pour les Recherches des Appartements
          * @param 
          * @method
          * 
@@ -118,7 +205,6 @@ class LocationRepository extends ServiceEntityRepository
 
             return $qb->getQuery()->getResult();
         }
-
         /**
          * Requetespour les Recherches des Appartements
          * @param 
@@ -186,11 +272,6 @@ class LocationRepository extends ServiceEntityRepository
      
             return $query->getResult();
         }
-
-
-
-        
-
 
 
         public function findAllWithCategories()
