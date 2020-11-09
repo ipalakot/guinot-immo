@@ -39,10 +39,11 @@ class HomeController extends AbstractController
     {
         $data = new SearchData();
         $form = $this->createForm(SearchForm::class, $data);
+        $form->handleRequest($request);
         $locations = $paginator->paginate( //utilisation du Paginator pour la pagination des pages
             $locarepo->findLocaRech($data),
             $request->query->getInt('page', 1), /*page number*/
-            20 /*limit per page*/
+            12 /*limit per page*/
          );
        // Appel de la page pour affichage
         return $this->render('home/index.html.twig', [

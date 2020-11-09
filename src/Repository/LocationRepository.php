@@ -4,8 +4,12 @@ namespace App\Repository;
 
 use App\Entity\Location;
 use App\Entity\Categorie;
+
+use App\Data\SearchData;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+
 
 /**
  * @method Location|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,6 +24,7 @@ class LocationRepository extends ServiceEntityRepository
         parent::__construct($registry, Location::class);
     }
 
+   
     /**
      * @return Location[] Returns an array of Location objects
      */
@@ -35,12 +40,13 @@ class LocationRepository extends ServiceEntityRepository
     * @return Location[]
     * 
     */
-        public function findSearch(){
+    public function findSearch(){
         
         return $this->findAll();    
     }
     
-        public function getPaginetedPage(int $page, int $length)
+    
+    public function getPaginetedPage(int $page, int $length)
     {
         $queryBuilder = $this->createQueryBuilder("p")
                             ->orderBy("p.createdAt", "desc" )
@@ -66,59 +72,41 @@ class LocationRepository extends ServiceEntityRepository
         ;
     }
 
+
     /** 
      * Recupère un produit en lien avec un bien
-     * @return Location
      * @return Location[]
      * 
     */
-    public function findLocaRech(): array
+    public function findLocaRech(SearchData $search): array
     {
-        
-        return $this->findAll();
-
-    /*     
         $query = $this
             ->createQueryBuilder('p')
             ->select('c', 'p')
             ->join('p.categorie', 'c');
 
-        if (!empty($search->q)) {
-            $query = $query
-                ->andWhere('p.denomination LIKE :q')
-                ->setParameter('q', "%{$search->q}%"); //Rech Part.
-        }
+            if (!empty($search->categories)) {
+                $query = $query
+                    ->andWhere('c.id IN (:categories)')
+                    ->setParameter('categories', $search->categories);
+            }
 
-        if (!empty($search->min)) {
-            $query = $query
-                ->andWhere('p.prix >= :min')
-                ->setParameter('min', $search->min);
-        }
+            if (!empty($search->min)) {
+                $query = $query
+                    ->andWhere('p.prix >= :min')
+                    ->setParameter('min', $search->min);
+            }
+    
+            if (!empty($search->max)) {
+                $query = $query
+                    ->andWhere('p.prix <= :max')
+                    ->setParameter('max', $search->max);
+            }
 
-        if (!empty($search->max)) {
-            $query = $query
-                ->andWhere('p.price <= :max')
-                ->setParameter('max', $search->max);
-    
-    */ 
-    
+        return $query->getQuery()->getResult();
     }
 
 
-
-    /** 
-     * Recupère un produit en lien avec un bien
-     * @return Location
-     * @return Location[]
-     * 
-    */
-    public function findLocationSearch(): array
-    {
-        return $this->findAll();
-    }
-
-
-        
     /**
     * Requetespour les Recherches des Terrains
     * @param 

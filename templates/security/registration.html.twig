@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %} 
+
+{% block title%} 'Connexion! {% endblock %} 
+
+{% block body %}
+ {{ include('_header_footers/header_location.html.twig') }}
+ <div class="container mt-4">
+
+   <div class="container mt-4">
+
+        {{ form_start(form) }}
+
+            {{ form_row(form.username, {'label': 'Noms'}) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.password, {'label': 'Mot de passe'}) }}
+
+        <button type="submit" class="btn btn-primary"> Connexion </button>
+        <br></br>
+        <br></br>
+
+        {{ form_end(form) }}
+    </div>
+
+</div>
+   
+
+{% endblock %}
