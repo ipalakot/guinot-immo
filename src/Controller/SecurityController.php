@@ -2,55 +2,35 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-
-use App\Form\RegistrationType;
-use Serializable;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/enregistrement", name="admin.enregistrement")
+     * @Route("/login", name="app_login")
      */
-    public function enregistrement(EntityManagerInterface $manager, Request $request, UserPasswordEncoderInterface $encoder)
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        $user= new User();
-        $form= $this->createForm(RegistrationType::class, $user);
-        $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()){
-                $hash = $encoder-> EncodePassword($user, $user->getPassword());
-                $user->setPassword($hash);
-                $manager->persist($user);
-                $manager->flush();
+        // if ($this->getUser()) {
+        //     return $this->redirectToRoute('target_path');
+        // }
 
-                return $this->redirectToRoute(admin.login);
-            }
-        return $this->render('security/registration.html.twig', [
-            'form' => $form->createView()
-        ]);
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
     /**
-     * @Route("/login", name="admin.login")
-     */
-    public function login()
-    {
-        return $this->render('security/login.html.twig');
-    }
-
-
-    /**
-     * @Route("/logout", name="admin.logout")
+     * @Route("/logout", name="app_logout")
      */
     public function logout()
     {
-        return $this->render('security/logout.html.twig');
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }
-
