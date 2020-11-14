@@ -14,8 +14,8 @@
                 <th>Noms</th>
                 <th>Prénoms</th>
                 <th>Mail</th>
-                <td>##</td>
-                 <td>##</td>
+                <td>Roles</td>
+
                 <th>Date de Création</th>
               {#  <th>Password</th>#}
                 <th>actions</th>
@@ -26,11 +26,24 @@
             <tr>
                 <td>{{ user.id }}</td>
                 <td>{{ user.username }}</td>
-                <td>##</td>
-                 <td>##</td>
-                 <td>##</td>
-                  <td>##</td>
-                <td>##</td>
+                <td>{{ user.noms }}</td>
+                <td>{{ user.prenoms }}</td>
+                 <td>{{ user.mail }}</td>
+
+                 <td>
+                    {% for role in user.roles %}
+                        {% if role=="ROLE_USER" %}
+                            Usr |
+                            {% elseif role=="ROLE_EDITOR" %}
+                                Edt | 
+                            {% elseif role=="ROLE_MODERA" %}
+                                Mod |
+                            {% elseif role=="ROLE_ADMIN" %}
+                                Adm |
+                        {% endif %}
+                    {% endfor %}
+                   {# {{ user.roles }}</td> #}
+
                  <td>##</td>
 
                 {# <td>{{ user.password }}</td> #}
@@ -45,10 +58,10 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="4">Pas d'Enregistrement</td>
             </tr>
         {% endfor %}
-            <a href="{{ path('users_new') }}"><button type="button" class="btn-outline-light">Enregistrer un nouvel utilisateur </a>
+            <a href="{{ path('app_register') }}"><button type="button" class="btn-outline-light">Enregistrer un nouvel utilisateur </a>
         </tbody>
     </table>
 

@@ -7,14 +7,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-
-
 /**
  * @ORM\Entity(repositoryClass=UsersRepository::class)
  * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
  */
-class Users implements UserInterface
+class Users implements UserInterface, \Serializable
 {
+    public const ROLE_USER = 'ROLE_USER';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+    
+    public function __construct()
+    {
+        $this->roles = [self::ROLE_USER];
+    }
+
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -32,6 +39,28 @@ class Users implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $noms;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $prenoms;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $mail;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="roles", type="json")
+     */
+    private $roles = [];
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -68,12 +97,103 @@ class Users implements UserInterface
         return null;
     }
 
-    public function getRoles()
+    public function getRoles():array
     {
-        return array('ROLE_ADMIN');
+        $roles = $this ->roles;
+
+        //garantit que chaque utilisateur possede le ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        //array_unique élimine des doublons
+        return array_unique($roles);
     }
 
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+    
     public function eraseCredentials()
     {
+    }
+
+    public function getNoms(): ?string
+    {
+        return $this->noms;
+    }
+
+    public function setNoms(string $noms): self
+    {
+        $this->noms = $noms;
+
+        return $this;
+    }
+
+    public function getPrenoms(): ?string
+    {
+        return $this->prenoms;
+    }
+
+    public function setPrenoms(string $prenoms): self
+    {
+        $this->prenoms = $prenoms;
+
+        return $this;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(string $mail): self
+    {
+        $this->mail = $mail;
+
+        return $this;
+    }
+
+    
+/** @see \Serializable::serialize() */
+public function serialize()
+{
+    return serialize(array(
+        $this->id,
+        $this->noms,
+        $this->prenoms,
+        $this->username,
+        $this->password,
+        $this->mail,
+        // see section on salt below
+        // $this->salt,
+    ));
+}
+
+/** @see \Serializable::unserialize() */
+public function unserialize($serialized)
+{
+    list (
+        $this->id,
+        $this->noms,
+        $this->prenoms,
+        $this->username,
+        $this->password,
+        $this->mail,
+
+        // see section on salt below
+        // $this->salt
+    ) = unserialize($serialized, array('allowed_classes' => false));
+}
+
+
+    /**
+	 * Returns the Response as an HTTP string.
+	 */
+	public function __toString()
+	{
+		return
+            $this->noms;
     }
 }

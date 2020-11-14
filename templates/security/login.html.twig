@@ -9,34 +9,49 @@
 <div class="container">
     <form method="post">
         {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
-<div class="col-sm-8">
-        <label for="inputUsername">Username</label>
-        <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" required autofocus>
-        <label for="inputPassword">Password</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" required>
-
-        <input type="hidden" name="_csrf_token"
-            value="{{ csrf_token('authenticate') }}" >
-</br>
-</br>
-</br>
-</div>
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
-
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" name="_remember_me"> Remember me
-                </label>
+            <div class="alert alert-danger">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
             </div>
-        #}
+        {% endif %}
+ 
+    <div class="row">
+        <div class="col-sm-6">
+                <label for="inputUsername">Username</label>
+                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" required autofocus>
+                <label for="inputPassword">Password</label>
+                <input type="password" name="password" id="inputPassword" class="form-control" required>
 
-        <button class="btn btn-lg btn-primary" type="submit">
-            Connexion
-        </button>
+                <input type="hidden" name="_csrf_token"
+                    value="{{ csrf_token('authenticate') }}" >
+                </br>
+                </br>
+                </br>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="card" style="text-align:center">
+                <div class="card-body">
+                    <h5> Cette page est reservée aux membres / Guinot-Immobilier</h5>
+                    <h5>si vous n'êtes pas encore Membre <a href="{{path('app_register')}}"> cliquez ici pour vous enregistrer</a> d'abord avant de vous connecter à notre site</h5>
+                </div>
+            </div>
+        </div>
+
+                {#
+                    Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+                    See https://symfony.com/doc/current/security/remember_me.html
+
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" name="_remember_me"> Remember me
+                        </label>
+                    </div>
+                #}
+
+                <button class="btn btn-lg btn-primary" type="submit">
+                    Connexion
+                </button>
     </form>
+</div>
 </div>
 {% endblock %}
