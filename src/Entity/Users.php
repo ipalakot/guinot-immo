@@ -65,6 +65,11 @@ class Users implements UserInterface, \Serializable
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $adresse;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $createdAt;
     
     public function getId(): ?int
     {
@@ -197,10 +202,10 @@ public function unserialize($serialized)
 	 * Returns the Response as an HTTP string.
 	 */
 	public function __toString()
-         	{
-         		return
-                     $this->noms;
-             }
+                  	{
+                  		return
+                              $this->noms;
+                      }
 
     public function getAdresse(): ?string
     {
@@ -210,6 +215,18 @@ public function unserialize($serialized)
     public function setAdresse(?string $adresse): self
     {
         $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

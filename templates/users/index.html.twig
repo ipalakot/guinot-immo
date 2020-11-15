@@ -13,8 +13,8 @@
                 <th>Username</th>
                 <th>Noms</th>
                 <th>Mail</th>
-                <td>Roles</td>
-                <th>Création</th>
+                <th>Roles</th>
+                <th>Date incription</th>
                 <th>Last Connexion</th>
               {#  <th>Password</th>#}
                 <th>actions</th>
@@ -31,18 +31,18 @@
                  <td>
                     {% for role in user.roles %}
                         {% if role=="ROLE_USER" %}
-                            Usr |
+                            - Utilisateur </br>
                             {% elseif role=="ROLE_EDITOR" %}
-                                Edt | 
+                            - Editeur </br>
                             {% elseif role=="ROLE_MODERA" %}
-                                Mod |
+                                - Moderateur </br>
                             {% elseif role=="ROLE_ADMIN" %}
-                                Adm |
+                                - Administrator </br>
                         {% endif %}
                     {% endfor %}
                    {# {{ user.roles }}</td> #}
 
-                 <td>##</td>
+                 <td>{{ user.createdAt | date('d/m/Y')}}</td>
                  <td>##</td>
 
                 {# <td>{{ user.password }}</td> #}

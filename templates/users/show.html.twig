@@ -36,6 +36,10 @@
                 <th>Adresse</th>
                 <td>{{ user.adresse }}</td>
             </tr>
+            <tr>
+                <th>Date d'inscription</th>
+                <td>{{ user.createdAt | date('d/m/Y')}}</td>
+            </tr>
 
         </tbody>
     </table>
