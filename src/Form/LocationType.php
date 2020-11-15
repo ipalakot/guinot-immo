@@ -5,6 +5,9 @@ namespace App\Form;
 use App\Entity\Location;
 use App\Repository\LocationRepository;
 
+use App\Entity\Images;
+use App\Repository\ImagesRepository;
+
 use App\Entity\Categorie;
 use App\Repository\CategorieRepositorie;
 
