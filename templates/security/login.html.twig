@@ -31,8 +31,13 @@
         <div class="col-sm-6">
             <div class="card" style="text-align:center">
                 <div class="card-body">
-                    <h5> Cette page est reservée aux membres / Guinot-Immobilier</h5>
-                    <h5>si vous n'êtes pas encore Membre <a href="{{path('app_register')}}"> cliquez ici pour vous enregistrer</a> d'abord avant de vous connecter à notre site</h5>
+                     {% if app.user %}
+                             Connexion établie pour:  <h4> {{ app.user.username }},</h4>
+                        {% else %}
+                             <h5> Cette page est reservée aux membres / Guinot-Immobilier</h5>
+                        <h5>si vous n'êtes pas encore Membre <a href="{{path('app_register')}}"> cliquez ici pour vous enregistrer</a> d'abord avant de vous connecter à notre site</h5>
+                    {% endif %}
+
                 </div>
             </div>
         </div>

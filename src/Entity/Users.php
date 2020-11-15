@@ -55,7 +55,7 @@ class Users implements UserInterface, \Serializable
     private $mail;
 
     /**
-     * @var array
+     * @var json
      *
      * @ORM\Column(name="roles", type="json")
      */

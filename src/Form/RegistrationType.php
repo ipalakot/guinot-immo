@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 class RegistrationType extends AbstractType
 {
@@ -16,8 +17,9 @@ class RegistrationType extends AbstractType
         $builder
             ->add('noms')
             ->add('prenoms')
-            ->add('email')
+            ->add('mail')
             ->add('username')
+            ->add('roles')
             ->add('password', PasswordType::class)
         ;
     }
