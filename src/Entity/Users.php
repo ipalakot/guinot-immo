@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UsersRepository::class)
- * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
+ * @UniqueEntity(fields={"mail"}, message="Attention: ce mail estdéjà utilisé")
  */
 class Users implements UserInterface, \Serializable
 {

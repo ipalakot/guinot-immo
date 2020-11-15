@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormFactoryInterface; 
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -217,7 +218,17 @@ class LocationController extends AbstractController
                             'class' => Categorie::class,
                         // uses the User.username property as the visible option string
                         'choice_label' => 'titre'])                
-                    ->add('photo')   
+                    ->add('photo')
+                    //Ajout dechamp "image" dans le formulaire
+                    // Image non lié à la DataBase (mapp = False)
+                    // Nous ferons la Manipulation nous meme  
+                    ->add('images', FileType::class, [
+                        'label'=> false,
+                        'multiple' => true,
+                        'mapped' => false,
+                        'required'=> false
+                    ])
+
                     ->add('description')
                     ->add('surface')                
                     ->add('type', ChoiceType::class, array(
