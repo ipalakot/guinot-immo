@@ -96,7 +96,7 @@ class Location
     private $categorie;
 
     /**
-     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="location", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="location", orphanRemoval=true, cascade={"persist"} )
      */
     private $images;
 
