@@ -60,6 +60,11 @@ class Users implements UserInterface, \Serializable
      * @ORM\Column(name="roles", type="json")
      */
     private $roles = [];
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $adresse;
     
     public function getId(): ?int
     {
@@ -192,8 +197,20 @@ public function unserialize($serialized)
 	 * Returns the Response as an HTTP string.
 	 */
 	public function __toString()
-	{
-		return
-            $this->noms;
+         	{
+         		return
+                     $this->noms;
+             }
+
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    public function setAdresse(?string $adresse): self
+    {
+        $this->adresse = $adresse;
+
+        return $this;
     }
 }

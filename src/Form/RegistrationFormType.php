@@ -23,6 +23,7 @@ class RegistrationFormType extends AbstractType
             ->add('prenoms')
             ->add('username')
             ->add('mail', EmailType::class)
+            ->add('adresse')
             ->add('roles', ChoiceType::class, array(
                 'choices' => array(
                     'Utilisateur'=> 'ROLE_USER',
