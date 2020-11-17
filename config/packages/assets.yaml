@@ -1,0 +1,4 @@
+framework:
+    assets:
+        # (Chemin vers le Fichier Manifeste)
+        json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'

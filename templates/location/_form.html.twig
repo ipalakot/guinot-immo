@@ -12,12 +12,18 @@
             <div class="col-md-2"> {{ form_row(formlocation.categorie) }} </div>
             <div class="col-md-2"> {{ form_row(formlocation.photo) }} </div>
             <div class="col-md-2"> {{ form_row(formlocation.images) }} </div>
+            {% for image in formlocation.images %}
+                <div>
+                    <img src="{{ asset('images/uploads' ~ image.name) }}" alt="image" width="150">
+                </div>
+            {% endfor %}
 
         </div>
     </div>
 
         <div class="row">
             <div class="col-md-12"> {{ form_row(formlocation.description) }} </div>
+            
         </div>
         
         <div class="row">
@@ -38,7 +44,18 @@
             <div class="col-md-5"> {{ form_row(formlocation.ville) }} </div>
             <div class="col-md-5"> {{ form_row(formlocation.pays) }} </div>
         </div>
-
+        <div class="row">
+            {% if app.request.attributes.get('_route') == 'location.edition' %}
+                    <h4>    Les images </h4>
+                    {% for image in formlocation.images %}
+                        <div>
+                            <img src="{{ asset('images/uploads' ~ image.name) }}" alt="image" width="150">
+                            <a href="{{ path('location_delete_image', {id: image.id}) }}"
+                            data-delete data-token="{{ csrf_token('delete' ~ image.id ) }}"> Supprimer </a>
+                        </div>
+                    {% endfor %}
+            {% endif %}    
+        </div>
          <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
         {{ form_end(formlocation) }}
         

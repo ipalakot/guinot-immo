@@ -1,0 +1,10 @@
+@import "~bootstrap/scss/bootstrap";
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+$primary: $blue !default;
+$info:          purple;
+
+body {
+    background-color: rgb(0, 1, 7);
+}

@@ -352,4 +352,34 @@ class LocationController extends AbstractController
         return $this->redirectToRoute('location_admin.index');
     }
 
+    /** 
+     * @Route("/image/{id}/supprime"), name="location_delete_image", methods={"DELETE"})
+     * 
+    */
+    public function deleteImage(Images $images, Request $request)
+    {
+        $data = json_decode($request->getcode);
+        if ($this->isCsrfTokenValid('delete'.$image->getId(), $data['_token'])) 
+        {
+            // Je recupere le nom de l'image
+            $nom = $image->getName();
+            // On supprime le Fichier
+            unlink($this->getParameter('image_directory').'/'.$nom);
+            
+            // On supprime l'entrée de la base
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($image);
+            $entityManager->flush();
+
+            // Reponse en Json
+            return new JsonResponse(['success' => 1]);
+        } else 
+            {
+                return new jsonResponse(['Error' => 'Tokeinvalid'], 400);
+             }
+        
+             return $this->redirectToRoute('location_admin.index');
+    }
 }
+
+
